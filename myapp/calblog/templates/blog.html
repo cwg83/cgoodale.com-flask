@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+    <section class="top">
+        <div class="container">  
+	        {% include 'header.html' %}
+	        <div class="navbar">
+		        <ul>
+        		  <li><a href="/">About</a></li>
+        		  <li><a href="/links">Links</a></li>
+        		  <li><a class="active" href="/blog">Blog</a></li>
+	        	</ul>
+        	</div>
+        </div>
+	</section> 
+	
+	<section class="middle">
+	    <div class="container">
+	        <article class="posts">
+                <div>
+    	    	    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                    <br>
+                    <b><p style="color:red;">{{ message }}</p></b>
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                    {% if g.user %}
+                    <a style="display: inline" class="btn btn-success float-right" href="/admin">+ New Post</a>
+                    {% endif %}
+                </div>
+                <br>
+                {% for post in posts %}
+                <h1 class="post-title">{{post.title}}</h1>
+                <p class="post-author"><i>Written by Calvin on {{post.posted_on.strftime('%B %d, %Y')}}</i></p>
+                <p class="post-content">{{post.content|safe}}</p>
+                {% if g.user %}
+                <a href="/blog/delete/{{post.id}}"><img src="https://qph.fs.quoracdn.net/main-qimg-83c6de25ed91d13a4f09fb5f11ca8853" height="25px" width="25px"></a>
+                <a href="/blog/edit/{{post.id}}"><img src="https://www.2g-eng.com/wp-content/uploads/2016/01/design-engineering-icon-small.png" height="25px" width="25px"></a>
+                {% endif %}
+                <br>
+                <button class="open-button" name="{{post.id}}" id="but{{post.id}}" onclick="toggleText(name)">Leave a comment</button>
+                <div class="form-popup" id="{{post.id}}" style="display:none">
+                    <form action="/comment" method="POST">
+                        <input type="hidden" name="post-id" value="{{post.id}}">
+                        <input class="form-control" type="text" name="name" id="name" placeholder="Enter Name" aria-label="Enter Name">
+                        <textarea class="form-control" id="message" name="message" placeholder="Enter Comment" aria-label="Enter Comment" rows="3"></textarea>
+                        <input type="submit" value="Comment">
+                    </form>
+                </div>
+                <script>
+                    function toggleText(post_id){
+                        var x = document.getElementById(post_id);
+                        var y = document.getElementById("but"+post_id);
+                        if (x.style.display !== "none") {
+                            x.style.display = "none";
+                        } else {
+                            x.style.display = "block";
+                        }
+                        if (y.innerHTML !== "Cancel") {
+                            y.innerHTML = "Cancel";
+                            y.className = "cancel-button";
+                        } else {
+                            y.innerHTML = "Leave a comment";
+                            y.className = "open-button";
+                        }
+                        }
+                </script>
+                {% if post.comment_count == 0 %}
+                    <p>{{post.comment_count}} Comments</p>
+                {% elif post.comment_count == 1 %}
+                    <p>{{post.comment_count}} Comment:</p>
+                {% else %}
+                    <p>{{post.comment_count}} Comments:</p>
+                {% endif %}
+                {% for comment in comments %}
+                    {% if (comment.post_id == post.id) and (comment.approved == 1) %}
+                    <table class="comment">
+                        <thead>
+                            <tr>
+                                <td><b>{{comment.name}}</b> <i style="font-size:12px; margin-left: 2.5em;">{{comment.date_pub.strftime('%B %d, %Y')}}</i></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{comment.message}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                        {% if g.user %}
+                            <a href="/comment/delete/{{comment.id}}">(delete comment)</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}       
+                <br>
+                <br>
+                <br>
+                <br>
+                
+                {% endfor %}
+                <br>
+                {% if prev_url %}
+                <a href="{{ prev_url }}">Newer posts</a>
+                {% endif %}
+                {% if next_url %}
+                <a href="{{ next_url }}">Older posts</a>
+                {% endif %}
+            </article>
+		</div>
+	</section>
+	
+	<section class="bottom">
+    	<div class="container">  
+            {% include 'footer.html' %}
+	    </div>
+	</section>	
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</body>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+    <section class="top">
+        <div class="container">  
+	        <div class="navbar">
+		        <ul>
+        		  <li><a href="/">About</a></li>
+        		  <li><a href="/links">Links</a></li>
+        		  <li><a href="/blog">Blog</a></li>
+	        	</ul>
+        	</div>
+        </div>
+	</section> 
+    <script>
+        tinymce.init({
+          selector: '#post',
+          plugins: 'lists advlist codesample',
+          height : "480",
+          toolbar: 'undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright | bullist numlist | codesample',
+          branding: false
+        });
+    </script>	
+
+    <div class="admin">
+        <br>
+        <form action="/logout">
+            <input style="background-color:red;" type="submit" value="Logout">
+        </form>
+        <br>
+        <form action="/blog" method="POST">
+            <input class="form-control" type="text" name="title" id="title" placeholder="Enter Title" aria-label="Enter Title">
+            <br>
+            <input class="form-control" type="text" name="category" id="category" placeholder="Enter Category" aria-label="Enter Category">
+             <br>
+            <textarea class="form-control" id="post" name="post" placeholder="Enter Content" aria-label="Enter Content" rows="8"></textarea>
+            <br>
+            <input type="submit" value="Post">
+        </form>
+        <br>
+        <hr>
+        <p>TO BE APPROVED:</p>
+        {% for comment in comments %}
+            {% if comment.approved == 0 %}
+            <table class="comment">
+                <thead>
+                    <tr>
+                        <td><b>{{comment.name}}</b> <i style="margin-left: 2.5em;">{{comment.date_pub.strftime('%B %d, %Y')}}</i></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{comment.message}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form action="/approval" method="POST">
+                <input type="hidden" name="comment-id" value="{{comment.id}}">
+                <button class="approval-button" name="submit-button" type="submit" value="approve">Approve</button><button class="rejection-button" name="submit-button" type="submit" value="reject">Reject</button>
+            </form>
+            <br>
+            <br>
+            {% endif %}
+        {% endfor %}
+    
+    </div>
+    
+</body>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+    <section class="top">
+        <div class="container">  
+	        {% include 'header.html' %}
+	        <div class="navbar">
+		        <ul>
+        		  <li><a class="active" href="/">About</a></li>
+        		  <li><a href="/links">Links</a></li>
+        		  <li><a href="/blog">Blog</a></li>
+	        	</ul>
+        	</div>
+        </div>
+	</section> 
+	
+	<section class="middle">
+	    <div class="container">
+	        <article class="aboutme">
+    	    	<h2 class="center-text">Hi, I'm Cal.</h2>
+    	    	<p>I'm a web developer and designer based in Maine. I've been studying both front-end and back-end web development for the better part of the last 10 years.</p>	
+	    	    <p>My current focus is Python.</p>		   
+    	    	<p>Feel free to take a look at some of my projects and <a href="mailto:calvin.goodale@gmail.com">contact me</a> if you have any questions.</p>	
+		   </article>
+		</div>  
+	</section>
+	
+	<section class="bottom">
+    	<div class="container">  
+            {% include 'footer.html' %}
+	    </div>
+	</section>	
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/content.js') }}"></script>	
+</body>
+{% endblock %}

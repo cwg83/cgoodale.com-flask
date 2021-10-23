@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <section class="middle">
+        <div class="posts">
+            <h2 class="center-text">Login</h2>
+            <form method="Post">
+                <div class="field">
+                    <label class="label">Username</label>
+                    <input class="input" type="text" name="username" placeholder="Username">
+                </div>   
+                <div class="field">
+                    <label class="label">Password</label>
+                    <input class="input" type="password" name="password" placeholder="Password">
+                </div>   
+                <div class="field">
+                    <button type="submit" class="button is-success">
+                        Login
+                    </button>
+                </div>    
+        </div>    
+    </section>     
+    </form>
+</div>
+{% endblock %}

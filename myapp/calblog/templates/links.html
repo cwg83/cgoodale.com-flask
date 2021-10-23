@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body %}
+<body>
+    
+    <section class="top">
+        <div class="container">  
+	        {% include 'header.html' %}
+	        <div class="navbar">
+		        <ul>
+        		  <li><a href="/">About</a></li>
+        		  <li><a class="active" href="/links">Links</a></li>
+        		  <li><a href="/blog">Blog</a></li>
+	        	</ul>
+        	</div>
+	    </div>
+	</section> 
+	
+	<section class="middle">
+	    <div class="container">  
+    	    <article class="center-text">
+    	    	
+    	    	<h3 style="margin-bottom:0"><a href="https://cgoodale.com">cgoodale.com</a></h3> 
+    	    	<p class = "description">My personal website</p>
+    	    	<p class="notes">Designed and coded</p>
+    	    
+    	    	<h3 style="margin-bottom:0"><a href="http://goodflowmanagement.com">goodflowmanagement.com</a></h3>
+    	    	<p class="description">Regional artist management company</p>
+    	    	<p class="notes">Designed and coded</p>
+				
+				<h3 style="margin-bottom:0"><a href="https://github.com/cwg83">GitHub</a></h3>
+    	    	<p class="description">My GitHub profile, with a few of my current projects</p>
+				
+				<h3 style="margin-bottom:0"><a href="https://codepen.io/Cal_Pal">CodePen</a></h3>
+    	    	<p class="description">My CodePen profile, with some of my front-end adventures</p>
+				
+				<h3 style="margin-bottom:0"><a href="https://www.hackerrank.com/calvin_goodale">HackerRank</a></h3>
+    	    	<p class="description">My HackerRank profile</p>
+    	    	
+    	    </article>	
+		</div>  
+	</section>
+	
+	<section class="bottom">
+    	<div class="container">  
+	        {% include 'footer.html' %}
+	    </div>
+	</section>	
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="javascript/content.js"></script>			
+</body>
+{% endblock %}
