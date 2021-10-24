@@ -28,17 +28,10 @@
     <script src="https://cdn.tiny.cloud/1/4k6x3enfndngb1rtn927in6qht9i579lfux4i5mwa0kg0qb2/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/prism.css') }}">
-    <script>
-        tinymce.init({
-          selector: '#post',
-          plugins: 'lists advlist codesample',
-          height : "480",
-          toolbar: 'undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright | bullist numlist | codesample',
-          branding: false
-        });
-    </script>	
+    	
     {% block head %}{% endblock %}
 </head>
+
 <body>
     <script src="{{ url_for('static', filename='js/prism.js') }}"></script>
     {% block body %}{% endblock %}

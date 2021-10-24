@@ -132,25 +132,25 @@ footer p a {
 }
 
 table.comment {
-  width: 100%;
-  background-color: #ffffff;
-  border-collapse: collapse;
-  border-width: 1px;
-  border-color: #808080;
-  border-style: dashed;
-  color: #000000;
-  font-size: 12px;
+	width: 100%;
+	background: #ffffff;
+	border-collapse: collapse;
+	border-width: 1px;
+	border-color: #808080;
+	border-style: dashed;
+	color: #000000;
+	font-size: 12px;
 }
 
 table.comment td, table.comment th {
-  border-width: 1px;
-  border-color: #808080;
-  border-style: solid;
-  padding: 15px;
+	border-width: 1px;
+	border-color: #808080;
+	border-style: solid;
+	padding: 15px;
 }
 
 table.comment thead {
-  background-color: #d4d4d4;
+	background: #d4d4d4;
 }
 
 .admin {
@@ -350,46 +350,48 @@ textarea {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-sizing: border-box;
-	margin-top: 6px;
 	margin-bottom: 16px;
 	resize: vertical
 }
 
-.cancel-button {
-	background-color: red;
+.cancel-button, .logout-button {
+	background: red;
 	color: white;
 	padding: 12px 20px;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+	margin-bottom: 16px;
 }
 
 .cancel-button:hover {
-	background-color: #c70000;
+	background: #c70000;
 }
 
 .open-button, input[type=submit] {
-	background-color: #429cd6;
+	background: #429cd6;
 	color: white;
 	padding: 12px 20px;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+	margin-bottom: 16px;
 }
 
 .open-button:hover, input[type=submit]:hover {
-	background-color: #0d77b7;
+	background: #0d77b7;
 }
 
-.formcontainer {
-	border-radius: 5px;
-	padding: 20px;
+.logout-button {
+	margin-top: 16px;
 }
 
-.contactform {
-	max-width: 80vh;
-	margin: 0 auto;
-	text-align: left;
+.flash-message, .post-section {
+	margin-bottom: 16px;
+}
+
+.comment-section {
+	margin-bottom: 125px;
 }
 
 .hideme {
