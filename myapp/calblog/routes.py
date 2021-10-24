@@ -71,7 +71,8 @@ def new_post():
         return redirect('/blog')
     else:
         comments = Comment.query.all()
-        return render_template('admin.html', comments=comments)
+        posts = Post.query.all()
+        return render_template('admin.html', comments=comments, posts=posts)
 
 @app.route('/comment', methods=['POST','GET'])
 def comments():

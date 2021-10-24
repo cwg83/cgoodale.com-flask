@@ -39,9 +39,14 @@
         </form>
         <br>
         <hr>
-        <p>TO BE APPROVED:</p>
+        <p><b>TO BE APPROVED:</b></p>
         {% for comment in comments %}
             {% if comment.approved == 0 %}
+                {% for post in posts %}
+                {% if post.id == comment.post_id %}
+                <small><i>Commented on <b>{{post.title}}</b></i></small>
+                {% endif %}
+                {% endfor %}
             <table class="comment">
                 <thead>
                     <tr>
