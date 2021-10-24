@@ -1,17 +1,20 @@
 from datetime import datetime
 from calblog import db
 
+# Post model
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, unique=True)
     content = db.Column(db.Text, nullable=False)
     posted_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
     category = db.Column(db.String(100), nullable=False)
+    # Count of related comments
     comment_count = db.Column(db.Integer, nullable=False, default=0)
 
     def __repr__(self):
         return self.title
 
+# User model
 class User:
     def __init__(self, id, username, password):
         self.id = id
@@ -21,10 +24,12 @@ class User:
     def __repr__(self):
         return f'<User: {self.username}>'
 
+# Comment model
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25), unique=False, nullable=False)
     message = db.Column(db.Text, nullable=False)
+    # id of related blog post
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
     post = db.relationship('Post', backref=db.backref('posts',lazy=True, passive_deletes=True))
     date_pub = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
