@@ -88,41 +88,53 @@ def comments():
 
 @app.route('/approval', methods=['GET', 'POST'])
 def approval():
-    if request.method == 'POST':
-        to_approve_id = request.form['comment-id']
-        to_approve = Comment.query.get_or_404(to_approve_id)
-        related_post = Post.query.get_or_404(to_approve.post_id)
-        if request.form['submit-button'] == "approve":
-            to_approve.approved = True
-            related_post.comment_count += 1
-        else:
-            db.session.delete(to_approve)
-        db.session.commit()
-        return redirect('/admin')
+    if not g.user:
+        return redirect('/login')
+    else:
+        if request.method == 'POST':
+            to_approve_id = request.form['comment-id']
+            to_approve = Comment.query.get_or_404(to_approve_id)
+            related_post = Post.query.get_or_404(to_approve.post_id)
+            if request.form['submit-button'] == "approve":
+                to_approve.approved = True
+                related_post.comment_count += 1
+            else:
+                db.session.delete(to_approve)
+            db.session.commit()
+            return redirect('/admin')
 
 @app.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    to_edit = Post.query.get_or_404(id)
-    if request.method == 'POST':
-        to_edit.title = request.form['title']
-        to_edit.content = request.form['post']
-        db.session.commit()
-        return redirect('/blog')
+    if not g.user:
+        return redirect('/login')
     else:
-        return render_template('edit.html', post=to_edit)
+        to_edit = Post.query.get_or_404(id)
+        if request.method == 'POST':
+            to_edit.title = request.form['title']
+            to_edit.content = request.form['post']
+            db.session.commit()
+            return redirect('/blog')
+        else:
+            return render_template('edit.html', post=to_edit)
 
 @app.route('/blog/delete/<int:id>')
 def delete(id):
-    to_delete = Post.query.get_or_404(id)
-    db.session.delete(to_delete)
-    db.session.commit()
-    return redirect('/blog')
+    if not g.user:
+        return redirect('/login')
+    else:
+        to_delete = Post.query.get_or_404(id)
+        db.session.delete(to_delete)
+        db.session.commit()
+        return redirect('/blog')
 
 @app.route('/comment/delete/<int:id>')
 def delete_comment(id):
-    to_delete = Comment.query.get_or_404(id)
-    related_post = Post.query.get_or_404(to_delete.post_id)
-    related_post.comment_count -= 1
-    db.session.delete(to_delete)
-    db.session.commit()
-    return redirect('/blog')
+    if not g.user:
+        return redirect('/login')
+    else:
+        to_delete = Comment.query.get_or_404(id)
+        related_post = Post.query.get_or_404(to_delete.post_id)
+        related_post.comment_count -= 1
+        db.session.delete(to_delete)
+        db.session.commit()
+        return redirect('/blog')
