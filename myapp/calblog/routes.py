@@ -14,8 +14,6 @@ def logout():
     session.pop('user_id', None)
     return redirect('login')
 
-
-
 @app.before_request
 def before_request():
     print(session)
@@ -23,7 +21,6 @@ def before_request():
     if 'user_id' in session:
         user = [x for x in get_users() if x.id == session['user_id']][0]
         g.user = user
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -51,24 +48,14 @@ def home():
 def links():
     return render_template('links.html')  # render a template
 
-@app.route('/blog', methods=['GET', 'POST'])
+@app.route('/blog', methods=['GET'])
 def blog():
-        if request.method == 'POST':
-            post_title = request.form['title']
-            post_content = request.form['post']
-            post_category = request.form['category']
-            new_post = Post(title=post_title, content=post_content, category=post_category)
-            db.session.add(new_post)
-            db.session.commit()
-
-            return redirect('/blog')
-        else:
-            page = request.args.get('page', 1, type=int)
-            posts = Post.query.order_by(desc(Post.posted_on)).paginate(page, 5, False)
-            comments = Comment.query.all()
-            next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
-            prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
-            return render_template('blog.html', posts=posts.items, comments=comments, next_url=next_url, prev_url=prev_url)  # render a template
+        page = request.args.get('page', 1, type=int)
+        posts = Post.query.order_by(desc(Post.posted_on)).paginate(page, 5, False)
+        comments = Comment.query.all()
+        next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
+        prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
+        return render_template('blog.html', posts=posts.items, comments=comments, next_url=next_url, prev_url=prev_url)  # render a template
 
 @app.route('/admin', methods=['GET', 'POST'])
 def new_post():
@@ -113,7 +100,6 @@ def approval():
         db.session.commit()
         return redirect('/admin')
 
-
 @app.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     to_edit = Post.query.get_or_404(id)
@@ -124,7 +110,6 @@ def edit(id):
         return redirect('/blog')
     else:
         return render_template('edit.html', post=to_edit)
-
 
 @app.route('/blog/delete/<int:id>')
 def delete(id):
