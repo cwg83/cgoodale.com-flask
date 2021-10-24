@@ -61,7 +61,6 @@ def blog():
 def new_post():
     if not g.user:
         return redirect('/login')
-
     elif request.method == 'POST':
         post_title = request.form['title']
         post_content = request.form['post']
