@@ -17,15 +17,15 @@
         <hr>
         <h2>Edit:</h2>
         <form action="/blog/edit/{{post.id}}" method="POST">
-            <label for="title">Title:</label>
             <input class="form-control" type="text" name="title" id="title" value="{{post.title}}">
             <br>
-            <label for="post">Post:</label>
+            <input class="form-control" type="text" name="category" id="category" placeholder="Enter Category" value="{{post.category}}">
+             <br>
             <textarea class="form-control" id="post2" name="post" rows="8">{{post.content}}</textarea>
             <br>
             <input type="submit" value="Save">
         </form>
     </div>
-    
+
 </body>
 {% endblock %}

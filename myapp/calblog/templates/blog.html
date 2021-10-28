@@ -34,15 +34,35 @@
                     {% endif %}
                     {% endwith %}
                     {% if g.user %}
-                    <a style="display: inline" class="btn btn-success float-right" href="/admin">Admin</a>
+                    <a class="admin-link" href="/admin">Admin</a>
                     {% endif %}
+                </div>
+
+                <div class="categories">
+                    <div class="dropdown">
+                        <button class="dropbtn"><b>Categories</b></button>
+                        <div class="dropdown-content">
+                        {% for category in unique_categories %}    
+                            <a class="dropdown-item" href="/blog/category/{{category.category}}">{{category.category}}</a> 
+                        {% endfor %}
+                        </div>
+                        
+                    </div>
                 </div>
 
                 <div class="post-section">
                     {% for post in posts %}
                     <h1 class="post-title">{{post.title}}</h1>
-                    <p class="post-author"><i>Written by Calvin on {{post.posted_on.strftime('%B %d, %Y')}}</i></p>
+                    <p class="post-author"><i>Posted by Calvin on {{post.posted_on.strftime('%B %d, %Y at %-I:%M %p')}}</i></p>
+                    <p class="post-category">Categories: 
+                    {% for category in categories %}
+                        {% if category.post_id == post.id %}
+                            <a href="/blog/category/{{category.category}}">{{category.category}}</a> 
+                        {% endif %}
+                    {% endfor %}
+                    
                     <p class="post-content">{{post.content|safe}}</p>
+                    
                     {% if g.user %}
                     <a href="/blog/delete/{{post.id}}"><img src="https://qph.fs.quoracdn.net/main-qimg-83c6de25ed91d13a4f09fb5f11ca8853" height="25px" width="25px"></a>
                     <a href="/blog/edit/{{post.id}}"><img src="https://www.2g-eng.com/wp-content/uploads/2016/01/design-engineering-icon-small.png" height="25px" width="25px"></a>

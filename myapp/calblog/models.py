@@ -6,13 +6,14 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, unique=True)
     content = db.Column(db.Text, nullable=False)
-    posted_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
-    category = db.Column(db.String(100), nullable=False)
+    posted_on = db.Column(db.DateTime, nullable=False)
+    categories = db.relationship('Categories', backref=db.backref('post',lazy=True, passive_deletes=True))
     # Count of related comments
     comment_count = db.Column(db.Integer, nullable=False, default=0)
+    comments = db.relationship('Comment', backref=db.backref('post',lazy=True, passive_deletes=True))
 
     def __repr__(self):
-        return self.title
+        return self.id
 
 # User model
 class User:
@@ -31,12 +32,21 @@ class Comment(db.Model):
     message = db.Column(db.Text, nullable=False)
     # id of related blog post
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
-    post = db.relationship('Post', backref=db.backref('posts',lazy=True, passive_deletes=True))
     date_pub = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     approved = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         return self.name
+
+# Category model
+class Categories(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # id of related blog post
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return self.category
 
 db.create_all()
 db.session.commit()

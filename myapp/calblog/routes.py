@@ -5,7 +5,7 @@ from flask import render_template, url_for, redirect, request, session, g, abort
 from sqlalchemy import desc
 
 from calblog import app, db, get_users
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Categories
 
 
 # Logout routing
@@ -63,15 +63,34 @@ def links():
 # cgoodale.com/blog routing
 @app.route('/blog', methods=['GET'])
 def blog():
-        page = request.args.get('page', 1, type=int)
-        # Display 5 most recent blog posts in descending order by date
-        posts = Post.query.order_by(desc(Post.posted_on)).paginate(page, 5, False)
-        # Query comments in order to show the related comments under each post
-        comments = Comment.query.all()
-        # Create the 'next page' and 'previous page' routes
-        next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
-        prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
-        return render_template('blog.html', posts=posts.items, comments=comments, next_url=next_url, prev_url=prev_url)  # render a template
+    page = request.args.get('page', 1, type=int)
+    # Display 5 most recent blog posts in descending order by date
+    posts = Post.query.order_by(desc(Post.posted_on)).paginate(page, 5, False)
+    # Query comments in order to show the related comments under each post
+    comments = Comment.query.all()
+    # Query categories for the sidebar
+    categories = Categories.query.all()
+    unique_categories = Categories.query.with_entities(Categories.category).distinct()
+    # Create the 'next page' and 'previous page' routes
+    next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
+    return render_template('blog.html', posts=posts.items, comments=comments, next_url=next_url, prev_url=prev_url, categories=categories, unique_categories=unique_categories)  # render a template
+
+# Category routing
+@app.route('/blog/category/<category>', methods=['GET'])
+def category(category):
+    page = request.args.get('page', 1, type=int)
+    # Display 5 most recent blog posts in descending order by date filtered by <category>
+    posts = Post.query.join(Categories, Categories.post_id == Post.id).filter(Categories.category == category).paginate(page, 5, False)
+    # Query comments in order to show the related comments under each post
+    comments = Comment.query.all()
+    # Query categories for the sidebar
+    categories = Categories.query.all()
+    unique_categories = Categories.query.with_entities(Categories.category).distinct()
+    # Create the 'next page' and 'previous page' routes
+    next_url = url_for('blog', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('blog', page=posts.prev_num) if posts.has_prev else None
+    return render_template('blog.html', posts=posts.items, comments=comments, next_url=next_url, prev_url=prev_url,  categories=categories, unique_categories=unique_categories)
 
 # cgoodale.com/admin routing
 @app.route('/admin', methods=['GET', 'POST'])
@@ -83,9 +102,14 @@ def new_post():
         # Get post data from form fields and commit to database
         post_title = request.form['title']
         post_content = request.form['post']
-        post_category = request.form['category']
-        new_post = Post(title=post_title, content=post_content, category=post_category)
+        post_categories = request.form['category'].split(", ")
+        posted_on = datetime.now()
+        new_post = Post(title=post_title, content=post_content, posted_on=posted_on)
         db.session.add(new_post)
+        db.session.commit()
+        for category in post_categories:
+            new_category =  Categories(category=category, post_id=new_post.id)
+            db.session.add(new_category)
         db.session.commit()
         return redirect('/blog')
     else:
@@ -146,6 +170,7 @@ def edit(id):
             # Get post data from form fields and commit to database
             to_edit.title = request.form['title']
             to_edit.content = request.form['post']
+            to_edit.category = request.form['category']
             db.session.commit()
             return redirect('/blog')
         else:
@@ -160,6 +185,9 @@ def delete(id):
     else:
         # Get id of post being deleted
         to_delete = Post.query.get_or_404(id)
+        related_categories = Categories.query.filter(Categories.post_id==id).all()
+        for cat in related_categories:
+            db.session.delete(cat)
         # Delete post and commit to database
         db.session.delete(to_delete)
         db.session.commit()
