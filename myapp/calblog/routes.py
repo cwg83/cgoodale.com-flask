@@ -3,8 +3,10 @@ import os
 
 from flask import render_template, url_for, redirect, request, session, g, abort, flash
 from sqlalchemy import desc
+import smtplib
+from email.message import EmailMessage
 
-from calblog import app, db, get_users
+from calblog import app, db, get_users, gmail_pass
 from .models import User, Post, Comment, Categories
 
 
@@ -81,7 +83,7 @@ def blog():
 def category(category):
     page = request.args.get('page', 1, type=int)
     # Display 5 most recent blog posts in descending order by date filtered by <category>
-    posts = Post.query.join(Categories, Categories.post_id == Post.id).filter(Categories.category == category).paginate(page, 5, False)
+    posts = Post.query.join(Categories, Categories.post_id == Post.id).filter(Categories.category == category).order_by(desc(Post.posted_on)).paginate(page, 5, False)
     # Query comments in order to show the related comments under each post
     comments = Comment.query.all()
     # Query categories for the sidebar
@@ -130,6 +132,18 @@ def comments():
         db.session.commit()
         # Flash message informing user of pending approval
         flash('Thank you for your comment. It is currently pending approval.')
+
+        msg = EmailMessage()
+        msg.set_content(f"New comment received -->\nCommenter: {name}\nMessage: {message}\nwww.cgoodale.com/admin")
+        msg['Subject'] = 'New comment on cgoodale.com'
+        msg['From'] = 'cgoodale.com@gmail.com'
+        msg['To'] = 'calvin.goodale@gmail.com'
+
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login("cgoodale.com@gmail.com", gmail_pass)
+        server.send_message(msg)
+        server.quit()
+
         return redirect('/blog')
 
 @app.route('/approval', methods=['GET', 'POST'])

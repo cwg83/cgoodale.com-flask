@@ -15,4 +15,6 @@ def get_users():
     users.append(User(id=1, username=app.config['USERNAME'], password=app.config['PASSWORD']))
     return users
 
+gmail_pass = app.config['GMAIL_PASS']
+
 from calblog import routes
