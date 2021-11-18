@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import pytz
 
 from flask import render_template, url_for, redirect, request, session, g, abort, flash
 from sqlalchemy import desc
@@ -105,7 +106,7 @@ def new_post():
         post_title = request.form['title']
         post_content = request.form['post']
         post_categories = request.form['category'].split(", ")
-        posted_on = datetime.now()
+        posted_on = datetime.now(pytz.timezone('US/Eastern'))
         new_post = Post(title=post_title, content=post_content, posted_on=posted_on)
         db.session.add(new_post)
         db.session.commit()
