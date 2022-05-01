@@ -134,17 +134,6 @@ def comments():
         # Flash message informing user of pending approval
         flash('Thank you for your comment. It is currently pending approval.')
 
-        msg = EmailMessage()
-        msg.set_content(f"New comment received -->\nCommenter: {name}\nMessage: {message}\nwww.cgoodale.com/admin")
-        msg['Subject'] = 'New comment on cgoodale.com'
-        msg['From'] = 'cgoodale.com@gmail.com'
-        msg['To'] = 'calvin.goodale@gmail.com'
-
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login("cgoodale.com@gmail.com", gmail_pass)
-        server.send_message(msg)
-        server.quit()
-
         return redirect('/blog')
 
 @app.route('/approval', methods=['GET', 'POST'])
